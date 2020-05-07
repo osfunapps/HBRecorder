@@ -23,9 +23,14 @@ import android.os.Environment;
 import android.os.IBinder;
 
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import android.os.ResultReceiver;
 import android.util.Log;
+
+import com.hbisoft.hbrecorder.events.HBRecorderObserver;
+import com.hbisoft.hbrecorder.events.HBRecorderObserversSubscriber;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -37,7 +42,7 @@ import java.util.Objects;
  * Copyright (c) 2019 . All rights reserved.
  */
 
-public class ScreenRecordService extends Service {
+public class ScreenRecordService extends Service implements HBRecorderObserver {
 
     private static final String TAG = "ScreenRecordService";
 
@@ -70,6 +75,10 @@ public class ScreenRecordService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
+
+        // added
+        HBRecorderObserversSubscriber.Companion.getInstance().subscribeObserver(this);
+
         //Get intent extras
         byte[] notificationSmallIcon = intent.getByteArrayExtra("notificationSmallBitmap");
         String notificationTitle = intent.getStringExtra("notificationTitle");
@@ -420,6 +429,7 @@ public class ScreenRecordService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onDestroy() {
+        HBRecorderObserversSubscriber.Companion.getInstance().unsubscribeObserver(this);
         super.onDestroy();
         resetAll();
 
@@ -444,8 +454,31 @@ public class ScreenRecordService extends Service {
         }
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    void pauseRecording() {
+        LiveData<Integer> lk = new MutableLiveData<>();
+    }
+
+
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onPause() {
+        mMediaRecorder.pause();
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onResume() {
+        mMediaRecorder.resume();
+
     }
 }

@@ -19,6 +19,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 
+import com.hbisoft.hbrecorder.events.HBRecorderObserversSubscriber;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
@@ -269,4 +271,16 @@ public class HBRecorder implements MyListener {
         observer.stopWatching();
         hbRecorderListener.HBRecorderOnComplete();
     }
+
+    // added
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    void resumeRecording() {
+        HBRecorderObserversSubscriber.Companion.getInstance().onResume();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    void pauseRecording() {
+        HBRecorderObserversSubscriber.Companion.getInstance().onPause();
+    }
+
 }

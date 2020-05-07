@@ -7,5 +7,4 @@ package com.hbisoft.hbrecorder.events
 interface HBRecorderObserver {
     fun onPause()
     fun onResume()
-
 }

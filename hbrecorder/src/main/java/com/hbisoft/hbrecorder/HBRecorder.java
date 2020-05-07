@@ -274,12 +274,12 @@ public class HBRecorder implements MyListener {
 
     // added
     @RequiresApi(api = Build.VERSION_CODES.N)
-    void resumeRecording() {
+    public void resumeRecording() {
         HBRecorderObserversSubscriber.Companion.getInstance().onResume();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    void pauseRecording() {
+    public void pauseRecording() {
         HBRecorderObserversSubscriber.Companion.getInstance().onPause();
     }
 
